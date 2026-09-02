@@ -14,8 +14,9 @@ h1{font-size:clamp(38px,8vw,70px);margin:8px 0 4px}
 .wheelWrap{position:relative;width:min(430px,82vw);height:min(430px,82vw);margin:10px auto 24px}
 canvas{width:100%;height:100%;border-radius:50%;box-shadow:0 12px 40px #0009}
 .pointer{position:absolute;top:-9px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:22px solid transparent;border-right:22px solid transparent;border-top:0;border-bottom:45px solid #ffd166;filter:drop-shadow(0 4px 5px #000)}
-button{border:0;border-radius:999px;padding:15px 28px;font-size:20px;font-weight:bold;cursor:pointer;background:#f3b84b;color:#25170e;box-shadow:0 8px 22px #0006}
+button{border:0;border-radius:999px;padding:15px 28px;font-size:20px;font-weight:bold;cursor:pointer;background:#f3b84b;color:#25170e;box-shadow:0 8px 22px #0006;transition:.2s}
 button:disabled{opacity:.5;cursor:not-allowed}
+button:hover:not(:disabled){transform:translateY(-2px)}
 .result{min-height:90px;margin:20px auto 0;padding:18px;border-radius:18px;background:#fff;color:#25170e;max-width:700px}
 .result h2{margin:0 0 8px;color:#7a3d18}
 .result p{margin:0;font-size:18px}
@@ -23,9 +24,19 @@ button:disabled{opacity:.5;cursor:not-allowed}
 input{padding:12px 15px;border-radius:12px;border:0;font-size:16px;width:220px}
 .small{opacity:.75;font-size:14px;margin-top:10px}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-top:25px}
-.recipeCard{background:#fff;color:#2b1b12;border-radius:15px;padding:16px;text-align:right;display:flex;gap:12px;align-items:center}
+.recipeCard{background:#fff;color:#2b1b12;border-radius:15px;padding:16px;text-align:right;display:flex;gap:12px;align-items:center;cursor:pointer;transition:.3s;border:2px solid transparent}
+.recipeCard:hover{transform:translateY(-4px);box-shadow:0 8px 20px #0004;border-color:#8d5427}
 .recipeCard h3{margin:0;font-size:17px}
 .num{background:#8d5427;color:#fff;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-weight:bold;flex:none}
+.modal{display:none;position:fixed;inset:0;background:#0008;z-index:999;align-items:center;justify-content:center}
+.modal.show{display:flex}
+.modal-content{background:#fff;color:#25170e;border-radius:22px;padding:35px;max-width:700px;width:90%;max-height:85vh;overflow-y:auto;box-shadow:0 20px 60px #000a}
+.modal-content h2{margin:0 0 15px;color:#7a3d18;font-size:32px;text-align:right}
+.modal-content h3{margin:20px 0 10px;color:#9a5424;font-size:20px;text-align:right}
+.modal-content ul,.modal-content ol{text-align:right;margin:10px 0;padding-right:20px}
+.modal-content li{margin:8px 0;line-height:1.6}
+.modal-content p{text-align:right;line-height:1.6;margin:8px 0}
+.modal-close{position:absolute;top:15px;left:15px;background:none;border:0;font-size:28px;cursor:pointer;color:#7a3d18}
 .hidden{display:none}
 </style>
 </head>
@@ -51,28 +62,206 @@ input{padding:12px 15px;border-radius:12px;border:0;font-size:16px;width:220px}
 </div>
 
 <h2 style="margin-top:38px">📖 כל 18 המתכונים</h2>
-<div class="grid"><div class="recipeCard"><span class="num">1</span><h3>סופריטו כרעיים ותפוחי אדמה</h3></div>
-<div class="recipeCard"><span class="num">2</span><h3>צ'יקן קורמה כרעיים + נאן</h3></div>
-<div class="recipeCard"><span class="num">3</span><h3>ריזוטו פטריות ופרמזן</h3></div>
-<div class="recipeCard"><span class="num">4</span><h3>רביולו חלמון + בר בלאן אנשובי ושאלוט</h3></div>
-<div class="recipeCard"><span class="num">5</span><h3>ברוסקטה טרטר לברק + איולי יוזו, אננס וצלפים</h3></div>
-<div class="recipeCard"><span class="num">6</span><h3>טארטלט פילו לימון ופטל</h3></div>
-<div class="recipeCard"><span class="num">7</span><h3>גאנש מוקצף + קראמבל שמן זית + ענבים קפואים</h3></div>
-<div class="recipeCard"><span class="num">8</span><h3>ניוקי לה רומנה + קרם תרד + גבינות + לברק</h3></div>
-<div class="recipeCard"><span class="num">9</span><h3>טרטר טונה במעטפת לחם + חלבון ביצה חבוי</h3></div>
-<div class="recipeCard"><span class="num">10</span><h3>ספיחה בשרית</h3></div>
-<div class="recipeCard"><span class="num">11</span><h3>פחזנית לוז + קרמל + אנגלז גזר־וניל</h3></div>
-<div class="recipeCard"><span class="num">12</span><h3>בורלה אגסים עם קרקר, קרם וניל ואגוזים</h3></div>
-<div class="recipeCard"><span class="num">13</span><h3>בוריקיטס חצילים</h3></div>
-<div class="recipeCard"><span class="num">14</span><h3>טורטליני דלעת + פריזיאן דלעת + פרידה</h3></div>
-<div class="recipeCard"><span class="num">15</span><h3>טטאקי טונה + ראגו בורגול + ציר דגים</h3></div>
-<div class="recipeCard"><span class="num">16</span><h3>סינטה צרובה + פטל + קצף סלק + אגוזי לוז</h3></div>
-<div class="recipeCard"><span class="num">17</span><h3>קבב דג + קרם גזר</h3></div>
-<div class="recipeCard"><span class="num">18</span><h3>ברולה פטל</h3></div></div>
+<div class="grid" id="recipeGrid"></div>
+</div>
+
+<div class="modal" id="modal">
+  <div class="modal-content" id="modalContent">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+  </div>
 </div>
 
 <script>
-const recipes = ['סופריטו כרעיים ותפוחי אדמה', 'צ\'יקן קורמה כרעיים + נאן', 'ריזוטו פטריות ופרמזן', 'רביולו חלמון + בר בלאן אנשובי ושאלוט', 'ברוסקטה טרטר לברק + איולי יוזו, אננס וצלפים', 'טארטלט פילו לימון ופטל', 'גאנש מוקצף + קראמבל שמן זית + ענבים קפואים', 'ניוקי לה רומנה + קרם תרד + גבינות + לברק', 'טרטר טונה במעטפת לחם + חלבון ביצה חבוי', 'ספיחה בשרית', 'פחזנית לוז + קרמל + אנגלז גזר־וניל', 'בורלה אגסים עם קרקר, קרם וניל ואגוזים', 'בוריקיטס חצילים', 'טורטליני דלעת + פריזיאן דלעת + פרידה', 'טטאקי טונה + ראגו בורגול + ציר דגים', 'סינטה צרובה + פטל + קצף סלק + אגוזי לוז', 'קבב דג + קרם גזר', 'ברולה פטל'];
+const recipes = [
+  {name:'סופריטו כרעיים ותפוחי אדמה',ingredients:['800 גרם כרעים',
+'600 גרם תפוחי אדמה',
+'200 גרם בצל',
+'6 שיני שום',
+'3 עגבניות'],steps:['חוותכים את הכרעים לקוביות','מחממים שמן בסיר כבד','מחזירים את הכרעים עד להטמעה כניה','מוסיפים בצל ושום','מוסיפים תפוחי אדמה קטנים','תבלים במלח וקורילנדר','משהים 35 דקות עד רכיכות']},
+  {name:'צ\'יקן קורמה כרעיים + נאן',ingredients:['800 גרם עוף',
+'250 גרם יוגורט',
+'3 כפיות קורי',
+'200 מל קוקוס חלב',
+'3 עגבניות',
+'2 בצלים'],steps:['מחממים שמן בסיר','מטגנים עוף עד זהוב','מוסיפים בצל וקורי','מחזיקים עד בישול','מוסיפים יוגורט וקוקוס חלב','משהים 20 דקות','מגישים עם נאן חם']},
+  {name:'ריזוטו פטריות ופרמזן',ingredients:['300 גרם אורז ריזוטו',
+'400 גרם פטריות',
+'1 בצל',
+'200 מל יין לבן',
+'1 ליטר מרק',
+'100 גרם פרמזן',
+'50 גרם חמאה'],steps:['מתופפים את המרק','מטגנים בצל','מוסיפים אורז','שופכים יין','מוסיפים מרק בהדרגה','מטגנים פטריות בצד','מוסיפים פטריות',
+'מערבבים בחמאה ופרמזן']},
+  {name:'רביולו חלמון + בר בלאן אנשובי ושאלוט',ingredients:['400 גרם קמח',
+'200 גרם ביצה',
+'4 חלמונים',
+'200 גרם בר בלאן',
+'6 אנשובים',
+'2 שאלוטים',
+'מלח ופפריקה'],steps:['מכינים בצק בקמח וביצה',
+'משהים חצי שעה',
+'מכינים מילוי: דגים וחלמונים',
+'יוצרים רביולו בעלי דקים',
+'משלים בתבנית שמן חם',
+'מגישים עם בר בלאן זהוב']},
+  {name:'ברוסקטה טרטר לברק + איולי יוזו',ingredients:['1 לחם סיאבטה',
+'400 גרם דג טרי',
+'200 גרם לברק',
+'3 לימונים',
+'2 אצוגים',
+'100 מל שמן זית',
+'1 צלף'],steps:['חותכים לחם לפרוסות',
+'קולים בתנור',
+'מבשלים טרטר: דג עדין + לברק + אצוג',
+'מכינים איולי יוזו',
+'מרחים על הפרוסות',
+'מקצף על גבי הטרטר']},
+  {name:'טארטלט פילו לימון ופטל',ingredients:['8 דפי פילו',
+'200 גרם אגוזי לוז',
+'150 מל קרם לימון',
+'100 גרם פטל',
+'50 גרם סוכר',
+'2 ביצים',
+'50 גרם חמאה'],steps:['מגלגלים דפי פילו בתבנית',
+'קולים בתנור עד ריאנה',
+'מכינים קרם לימון עדין',
+'מוזגים לתוך הטארטלט',
+'קולים 12 דקות',
+'מקשטים בפטל טרי']},
+  {name:'גאנש מוקצף + קראמבל שמן זית',ingredients:['200 גרם שוקולד',
+'150 מל קרם',
+'100 גרם קמח',
+'80 גרם שמן זית',
+'30 גרם סוכר',
+'50 גרם ענבים קפואים'],steps:['מוסיקים גאנש: שוקולד וקרם',
+'קולים לקרה',
+'מקצפים בטלוויזיה',
+'מכינים קראמבל: קמח וזית וסוכר',
+'קולים 12 דקות',
+'מחברים עם ענבים']},
+  {name:'ניוקי לה רומנה + קרם תרד',ingredients:['500 מל חלב',
+'100 גרם סמולינה',
+'50 גרם פרמזן',
+'250 גרם תרד',
+'100 גרם קרם',
+'3 שיני שום',
+'מלח ופלפל'],steps:['מחממים חלב',
+'מוזגים סמולינה',
+'מוסיפים פרמזן',
+'יוצרים דיסקים וקולים',
+'מכינים קרם תרד',
+'מגלגלים בקרם']},
+  {name:'טרטר טונה במעטפת לחם + חלבון',ingredients:['400 גרם טונה',
+'200 גרם לחם בוקט',
+'3 ביצים',
+'100 מל מיו',
+'2 לימונים',
+'1 צלף',
+'מלח ופפריקה'],steps:['בוררים טונה טרי',
+'מוסיפים מיו ולימון',
+'תבלים בפלפל',
+'יוצרים עדשות מלחם',
+'מטגנים בשמן',
+'מגישים עם חלבון ביצה']},
+  {name:'ספיחה בשרית',ingredients:['600 גרם בשר טחון',
+'200 גרם בצל',
+'4 שיני שום',
+'100 גרם פירורי לחם',
+'2 ביצים',
+'200 מל רוטב עגבניות',
+'תבלים'],steps:['מטגנים בצל',
+'מערבבים בשר עם ביצים ופירור',
+'יוצרים כדורים',
+'קולים בתנור',
+'מוסיפים רוטב עגבניות',
+'משהים 25 דקות']},
+  {name:'פחזנית לוז + קרמל + אנגלז גזר',ingredients:['150 גרם אגוזי לוז',
+'100 גרם סוכר לקרמל',
+'200 מל קרם',
+'150 גרם גזר',
+'1 בד וניל',
+'50 גרם שוקולד'],steps:['קולים אגוזים',
+'מכינים קרמל זהוב',
+'מוזגים אגוזים בקרמל',
+'קולים על קרח',
+'מכינים אנגלז גזר-וניל',
+'מייצרים פחזנית בתבנית']},
+  {name:'בורלה אגסים עם קרקר וקרם וניל',ingredients:['4 אגסים',
+'100 גרם שוקולד',
+'150 גרם קרם וניל',
+'80 גרם קרקר',
+'50 גרם חמאה',
+'30 גרם סוכר'],steps:['חוותכים אגסים',
+'מטגנים בחמאה וסוכר',
+'מכינים קרם וניל',
+'יוצרים קרקר בתנור',
+'מערבבים עם חמאה',
+'מגלגלים בקרם ובקרקר']},
+  {name:'בוריקיטס חצילים',ingredients:['3 חצילים',
+'200 גרם גבינה לבנה',
+'100 גרם בזיליקום',
+'8 דפי דינסטי',
+'50 גרם שמן זית',
+'מלח ופפריקה'],steps:['מטגנים חצילים',
+'מערבבים עם גבינה ובזיליקום',
+'יוצרים קטעי בוריקה',
+'מגלגלים בדפי דינסטי',
+'קולים עד זהוב']},
+  {name:'טורטליני דלעת + פריזיאן דלעת',ingredients:['400 גרם קמח',
+'3 ביצים',
+'400 גרם דלעת',
+'100 גרם פרמזן',
+'50 גרם חמאה',
+'תבלים'],steps:['מכינים בצק בקמח וביצה',
+'מבשלים דלעת',
+'מערבבים עם פרמזן',
+'יוצרים טורטליני קטנים',
+'משלים בתבנית מים חמים',
+'מקשטים בפריזיאן']},
+  {name:'טטאקי טונה + ראגו בורגול + ציר דגים',ingredients:['400 גרם טונה',
+'150 גרם בורגול',
+'100 גרם בצל',
+'200 מל מרק דגים',
+'50 מל סויה',
+'1 צלף'],steps:['אוטים בורגול',
+'מטגנים טונה בחיצוני בלבד',
+'מכינים ראגו: בורגול ובצל',
+'משלימים בניירות',
+'מכינים ציר דגים',
+'מגישים בצורת לירה']},
+  {name:'סינטה צרובה + פטל + קצף סלק',ingredients:['200 גרם בצק פילו',
+'100 גרם סוכר',
+'150 גרם פטל',
+'100 גרם סלק',
+'50 מל קרם',
+'מלח דקה'],steps:['צורבים בצק בתנור',
+'יוצרים הצורה של סינתה',
+'מטגנים פטל בעדינות',
+'מכינים קצף סלק קר',
+'מגלגלים בתוך הסינתה']},
+  {name:'קבב דג + קרם גזר',ingredients:['400 גרם דג לבן',
+'100 גרם פירורי לחם',
+'2 ביצים',
+'150 גרם גזר',
+'100 מל קרם',
+'תבלים'],steps:['מטחנים דג',
+'מערבבים עם פירור וביצה',
+'יוצרים קבבים',
+'טגנים בשמן',
+'מכינים קרם גזר',
+'מגישים עם קצף']},
+  {name:'ברולה פטל',ingredients:['400 מל קרם',
+'100 גרם סוכר',
+'200 גרם פטל',
+'1 בד וניל',
+'4 חלמונים'],steps:['מחממים קרם עם וניל',
+'מערבבים עם חלמונים',
+'משפכים לכוסות',
+'קולים בתנור מימי',
+'קופאים בלילה',
+'צורבים סוכר עליון']}
+];
+
 const canvas=document.getElementById('wheel');
 const ctx=canvas.getContext('2d');
 const n=recipes.length;
@@ -89,7 +278,7 @@ function drawWheel(){
     ctx.strokeStyle="#fff";ctx.lineWidth=3;ctx.stroke();
     ctx.save();ctx.translate(cx,cy);ctx.rotate(a+slice/2);
     ctx.textAlign="right";ctx.fillStyle="#fff";ctx.font="bold 22px Arial";
-    let text=recipes[i];
+    let text=recipes[i].name;
     if(text.length>25) text=text.slice(0,24)+"…";
     ctx.fillText(text,340,8);ctx.restore();
   }
@@ -97,6 +286,34 @@ function drawWheel(){
   ctx.fillStyle="#7a3d18";ctx.font="bold 25px Arial";ctx.textAlign="center";ctx.fillText("מתכון",cx,cy+9);
 }
 drawWheel();
+
+function renderRecipes(){
+  const grid=document.getElementById('recipeGrid');
+  grid.innerHTML=recipes.map((r,i)=>`
+    <div class="recipeCard" onclick="openModal(${i})">
+      <span class="num">${i+1}</span>
+      <h3>${r.name}</h3>
+    </div>
+  `).join('');
+}
+renderRecipes();
+
+function openModal(index){
+  const r=recipes[index];
+  document.getElementById('modalContent').innerHTML=`
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <h2>${r.name}</h2>
+    <h3>🛒 מצרכים</h3>
+    <ul>${r.ingredients.map(i=>`<li>${i}</li>`).join('')}</ul>
+    <h3>👨‍🍳 הכנה</h3>
+    <ol>${r.steps.map(s=>`<li>${s}</li>`).join('')}</ol>
+  `;
+  document.getElementById('modal').classList.add('show');
+}
+
+function closeModal(){
+  document.getElementById('modal').classList.remove('show');
+}
 
 function spin(){
  if(spinning)return;
@@ -120,11 +337,15 @@ function spin(){
      const index=Math.floor(normalized/slice);
      const name=document.getElementById('playerName').value.trim();
      document.getElementById('result').innerHTML=
-       `<h2>🎉 ${name?name+" — ":""}יצא לכם:</h2><p><b>${recipes[index]}</b></p>`;
+       `<h2>🎉 ${name?name+" — ":""}יצא לכם:</h2><p style="cursor:pointer;color:#7a3d18" onclick="openModal(${index})"><b>${recipes[index].name}</b> (לחץ לפתיחת המתכון)</p>`;
    }
  }
  requestAnimationFrame(frame);
 }
+
+window.closeModal=closeModal;
+window.openModal=openModal;
+window.spin=spin;
 </script>
 </body>
 </html>
