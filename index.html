@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>גלגל המתכון — דלת המתכון</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:radial-gradient(circle at top,#5b351d,#17100c 65%);color:#fff;min-height:100vh}
+.container{width:min(1100px,94%);margin:auto;padding:28px 0 50px;text-align:center}
+h1{font-size:clamp(38px,8vw,70px);margin:8px 0 4px}
+.subtitle{font-size:19px;opacity:.85;margin-bottom:25px}
+.game{background:#ffffff12;border:1px solid #ffffff25;border-radius:28px;padding:24px;box-shadow:0 20px 60px #0008;backdrop-filter:blur(8px)}
+.wheelWrap{position:relative;width:min(430px,82vw);height:min(430px,82vw);margin:10px auto 24px}
+canvas{width:100%;height:100%;border-radius:50%;box-shadow:0 12px 40px #0009}
+.pointer{position:absolute;top:-9px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:22px solid transparent;border-right:22px solid transparent;border-top:0;border-bottom:45px solid #ffd166;filter:drop-shadow(0 4px 5px #000)}
+button{border:0;border-radius:999px;padding:15px 28px;font-size:20px;font-weight:bold;cursor:pointer;background:#f3b84b;color:#25170e;box-shadow:0 8px 22px #0006}
+button:disabled{opacity:.5;cursor:not-allowed}
+.result{min-height:90px;margin:20px auto 0;padding:18px;border-radius:18px;background:#fff;color:#25170e;max-width:700px}
+.result h2{margin:0 0 8px;color:#7a3d18}
+.result p{margin:0;font-size:18px}
+.players{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:18px 0}
+input{padding:12px 15px;border-radius:12px;border:0;font-size:16px;width:220px}
+.small{opacity:.75;font-size:14px;margin-top:10px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-top:25px}
+.recipeCard{background:#fff;color:#2b1b12;border-radius:15px;padding:16px;text-align:right;display:flex;gap:12px;align-items:center}
+.recipeCard h3{margin:0;font-size:17px}
+.num{background:#8d5427;color:#fff;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-weight:bold;flex:none}
+.hidden{display:none}
+</style>
+</head>
+<body>
+<div class="container">
+<h1>🎡 גלגל המתכון</h1>
+<div class="subtitle">דלת המתכון • כל שחקן מגריל מנה אחרת</div>
+
+<div class="game">
+  <div class="players">
+    <input id="playerName" placeholder="שם השחקן (אופציונלי)">
+  </div>
+  <div class="wheelWrap">
+    <canvas id="wheel" width="800" height="800"></canvas>
+    <div class="pointer"></div>
+  </div>
+  <button id="spinBtn" onclick="spin()">🎯 הגרל לי מתכון</button>
+  <div class="result" id="result">
+    <h2>מי הבא?</h2>
+    <p>לחצו על הכפתור והגלגל יבחר מתכון.</p>
+  </div>
+  <div class="small">כל הגרלה בוחרת מתכון מתוך 18 המנות שבנינו.</div>
+</div>
+
+<h2 style="margin-top:38px">📖 כל 18 המתכונים</h2>
+<div class="grid"><div class="recipeCard"><span class="num">1</span><h3>סופריטו כרעיים ותפוחי אדמה</h3></div>
+<div class="recipeCard"><span class="num">2</span><h3>צ'יקן קורמה כרעיים + נאן</h3></div>
+<div class="recipeCard"><span class="num">3</span><h3>ריזוטו פטריות ופרמזן</h3></div>
+<div class="recipeCard"><span class="num">4</span><h3>רביולו חלמון + בר בלאן אנשובי ושאלוט</h3></div>
+<div class="recipeCard"><span class="num">5</span><h3>ברוסקטה טרטר לברק + איולי יוזו, אננס וצלפים</h3></div>
+<div class="recipeCard"><span class="num">6</span><h3>טארטלט פילו לימון ופטל</h3></div>
+<div class="recipeCard"><span class="num">7</span><h3>גאנש מוקצף + קראמבל שמן זית + ענבים קפואים</h3></div>
+<div class="recipeCard"><span class="num">8</span><h3>ניוקי לה רומנה + קרם תרד + גבינות + לברק</h3></div>
+<div class="recipeCard"><span class="num">9</span><h3>טרטר טונה במעטפת לחם + חלבון ביצה חבוי</h3></div>
+<div class="recipeCard"><span class="num">10</span><h3>ספיחה בשרית</h3></div>
+<div class="recipeCard"><span class="num">11</span><h3>פחזנית לוז + קרמל + אנגלז גזר־וניל</h3></div>
+<div class="recipeCard"><span class="num">12</span><h3>בורלה אגסים עם קרקר, קרם וניל ואגוזים</h3></div>
+<div class="recipeCard"><span class="num">13</span><h3>בוריקיטס חצילים</h3></div>
+<div class="recipeCard"><span class="num">14</span><h3>טורטליני דלעת + פריזיאן דלעת + פרידה</h3></div>
+<div class="recipeCard"><span class="num">15</span><h3>טטאקי טונה + ראגו בורגול + ציר דגים</h3></div>
+<div class="recipeCard"><span class="num">16</span><h3>סינטה צרובה + פטל + קצף סלק + אגוזי לוז</h3></div>
+<div class="recipeCard"><span class="num">17</span><h3>קבב דג + קרם גזר</h3></div>
+<div class="recipeCard"><span class="num">18</span><h3>ברולה פטל</h3></div></div>
+</div>
+
+<script>
+const recipes = ['סופריטו כרעיים ותפוחי אדמה', 'צ\'יקן קורמה כרעיים + נאן', 'ריזוטו פטריות ופרמזן', 'רביולו חלמון + בר בלאן אנשובי ושאלוט', 'ברוסקטה טרטר לברק + איולי יוזו, אננס וצלפים', 'טארטלט פילו לימון ופטל', 'גאנש מוקצף + קראמבל שמן זית + ענבים קפואים', 'ניוקי לה רומנה + קרם תרד + גבינות + לברק', 'טרטר טונה במעטפת לחם + חלבון ביצה חבוי', 'ספיחה בשרית', 'פחזנית לוז + קרמל + אנגלז גזר־וניל', 'בורלה אגסים עם קרקר, קרם וניל ואגוזים', 'בוריקיטס חצילים', 'טורטליני דלעת + פריזיאן דלעת + פרידה', 'טטאקי טונה + ראגו בורגול + ציר דגים', 'סינטה צרובה + פטל + קצף סלק + אגוזי לוז', 'קבב דג + קרם גזר', 'ברולה פטל'];
+const canvas=document.getElementById('wheel');
+const ctx=canvas.getContext('2d');
+const n=recipes.length;
+let rotation=0, spinning=false;
+
+function drawWheel(){
+  const cx=400,cy=400,r=370;
+  ctx.clearRect(0,0,800,800);
+  const slice=Math.PI*2/n;
+  for(let i=0;i<n;i++){
+    const a=rotation+i*slice;
+    ctx.beginPath();ctx.moveTo(cx,cy);ctx.arc(cx,cy,r,a,a+slice);ctx.closePath();
+    ctx.fillStyle=`hsl(${i*360/n}, 68%, 48%)`;ctx.fill();
+    ctx.strokeStyle="#fff";ctx.lineWidth=3;ctx.stroke();
+    ctx.save();ctx.translate(cx,cy);ctx.rotate(a+slice/2);
+    ctx.textAlign="right";ctx.fillStyle="#fff";ctx.font="bold 22px Arial";
+    let text=recipes[i];
+    if(text.length>25) text=text.slice(0,24)+"…";
+    ctx.fillText(text,340,8);ctx.restore();
+  }
+  ctx.beginPath();ctx.arc(cx,cy,62,0,Math.PI*2);ctx.fillStyle="#fff";ctx.fill();
+  ctx.fillStyle="#7a3d18";ctx.font="bold 25px Arial";ctx.textAlign="center";ctx.fillText("מתכון",cx,cy+9);
+}
+drawWheel();
+
+function spin(){
+ if(spinning)return;
+ spinning=true;document.getElementById('spinBtn').disabled=true;
+ const start=rotation;
+ const extra=Math.PI*2*(6+Math.random()*4);
+ const target=start+extra;
+ const duration=4200;const t0=performance.now();
+ function frame(now){
+   const p=Math.min(1,(now-t0)/duration);
+   const eased=1-Math.pow(1-p,4);
+   rotation=start+(target-start)*eased;
+   drawWheel();
+   if(p<1) requestAnimationFrame(frame);
+   else {
+     spinning=false;document.getElementById('spinBtn').disabled=false;
+     const slice=2*Math.PI/n;
+     let pointerAngle=-Math.PI/2;
+     let normalized=(pointerAngle-rotation)%(2*Math.PI);
+     if(normalized<0)normalized+=2*Math.PI;
+     const index=Math.floor(normalized/slice);
+     const name=document.getElementById('playerName').value.trim();
+     document.getElementById('result').innerHTML=
+       `<h2>🎉 ${name?name+" — ":""}יצא לכם:</h2><p><b>${recipes[index]}</b></p>`;
+   }
+ }
+ requestAnimationFrame(frame);
+}
+</script>
+</body>
+</html>
