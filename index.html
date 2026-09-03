@@ -26,6 +26,8 @@ li{margin:7px 0}.timer{font-size:34px;font-weight:bold;letter-spacing:1px}
 .progress{height:12px;background:#dfd2c2;border-radius:99px;overflow:hidden}.bar{height:100%;width:0;background:#7b3f24;transition:.3s}
 .score{font-size:25px;font-weight:bold}
 @media(max-width:650px){.grid{grid-template-columns:1fr}.card{padding:17px}.btn{width:100%;margin:5px 0}}
+details{background:#fffaf2;border-radius:12px;padding:12px;margin-top:12px;border:1px solid #ead4b8}
+summary{font-weight:bold;cursor:pointer}
 </style>
 </head>
 <body>
@@ -36,6 +38,20 @@ li{margin:7px 0}.timer{font-size:34px;font-weight:bold;letter-spacing:1px}
     <div class="sub">שלוף את המתכון שלך</div>
     <p>כל שחקן מקבל פתק אקראי עם מתכון שהוא צריך לבשל.</p>
     <div class="stats"><div class="stat">12 מתכונים</div><div class="stat">45 דקות</div><div class="stat">עד 1200 נקודות</div></div>
+
+    <details open>
+      <summary>איך משחקים</summary>
+      <ol style="text-align:right;margin:12px 0 0 0;padding-left:18px">
+        <li>פותחים את <code>index.html</code>.</li>
+        <li>לוחצים "מתחילים".</li>
+        <li>כל שחקן שולף פתק אקראי עם מתכון.</li>
+        <li>מבשלים במשך 45 דקות.</li>
+        <li>מסמנים "סיימתי לבשל" ומקבלים 100 נקודות.</li>
+        <li>המטרה: להשלים את 12 המתכונים ולצבור עד 1200 נקודות.</li>
+      </ol>
+      <p style="text-align:right;margin-top:8px">להפעלת GitHub Pages: העלו את <code>index.html</code> ואת תיקיית <code>assets</code> ל־repository ובחרו Settings → Pages → branch: <code>main</code> → folder: <code>/root</code>.</p>
+    </details>
+
     <button class="btn" onclick="startGame()">מתחילים 🎲</button>
   </main>
 </div>
