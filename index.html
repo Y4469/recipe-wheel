@@ -1,351 +1,131 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="he" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>גלגל המתכון — דלת המתכון</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>משחק הבישול — שלוף את המתכון שלך</title>
 <style>
-*{box-sizing:border-box}
-body{margin:0;font-family:Arial,sans-serif;background:radial-gradient(circle at top,#5b351d,#17100c 65%);color:#fff;min-height:100vh}
-.container{width:min(1100px,94%);margin:auto;padding:28px 0 50px;text-align:center}
-h1{font-size:clamp(38px,8vw,70px);margin:8px 0 4px}
-.subtitle{font-size:19px;opacity:.85;margin-bottom:25px}
-.game{background:#ffffff12;border:1px solid #ffffff25;border-radius:28px;padding:24px;box-shadow:0 20px 60px #0008;backdrop-filter:blur(8px)}
-.wheelWrap{position:relative;width:min(430px,82vw);height:min(430px,82vw);margin:10px auto 24px}
-canvas{width:100%;height:100%;border-radius:50%;box-shadow:0 12px 40px #0009}
-.pointer{position:absolute;top:-9px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:22px solid transparent;border-right:22px solid transparent;border-top:0;border-bottom:45px solid #ffd166;filter:drop-shadow(0 4px 5px #000)}
-button{border:0;border-radius:999px;padding:15px 28px;font-size:20px;font-weight:bold;cursor:pointer;background:#f3b84b;color:#25170e;box-shadow:0 8px 22px #0006;transition:.2s}
-button:disabled{opacity:.5;cursor:not-allowed}
-button:hover:not(:disabled){transform:translateY(-2px)}
-.result{min-height:90px;margin:20px auto 0;padding:18px;border-radius:18px;background:#fff;color:#25170e;max-width:700px}
-.result h2{margin:0 0 8px;color:#7a3d18}
-.result p{margin:0;font-size:18px}
-.players{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:18px 0}
-input{padding:12px 15px;border-radius:12px;border:0;font-size:16px;width:220px}
-.small{opacity:.75;font-size:14px;margin-top:10px}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-top:25px}
-.recipeCard{background:#fff;color:#2b1b12;border-radius:15px;padding:16px;text-align:right;display:flex;gap:12px;align-items:center;cursor:pointer;transition:.3s;border:2px solid transparent}
-.recipeCard:hover{transform:translateY(-4px);box-shadow:0 8px 20px #0004;border-color:#8d5427}
-.recipeCard h3{margin:0;font-size:17px}
-.num{background:#8d5427;color:#fff;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-weight:bold;flex:none}
-.modal{display:none;position:fixed;inset:0;background:#0008;z-index:999;align-items:center;justify-content:center}
-.modal.show{display:flex}
-.modal-content{background:#fff;color:#25170e;border-radius:22px;padding:35px;max-width:700px;width:90%;max-height:85vh;overflow-y:auto;box-shadow:0 20px 60px #000a}
-.modal-content h2{margin:0 0 15px;color:#7a3d18;font-size:32px;text-align:right}
-.modal-content h3{margin:20px 0 10px;color:#9a5424;font-size:20px;text-align:right}
-.modal-content ul,.modal-content ol{text-align:right;margin:10px 0;padding-right:20px}
-.modal-content li{margin:8px 0;line-height:1.6}
-.modal-content p{text-align:right;line-height:1.6;margin:8px 0}
-.modal-close{position:absolute;top:15px;left:15px;background:none;border:0;font-size:28px;cursor:pointer;color:#7a3d18}
-.hidden{display:none}
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#f6efe4;color:#2f241b}
+button{font:inherit;cursor:pointer;border:0}.hidden{display:none!important}
+.wrap{max-width:900px;margin:auto;padding:18px}
+.hero{min-height:100vh;display:flex;align-items:center;justify-content:center}
+.card{background:#fffaf2;border-radius:24px;padding:24px;box-shadow:0 12px 35px #0002}
+.cover{width:100%;max-height:330px;object-fit:cover;border-radius:18px;margin-bottom:18px}
+h1{font-size:clamp(30px,7vw,54px);margin:8px 0}.sub{font-size:20px;color:#73553b}
+.btn{background:#7b3f24;color:white;padding:15px 22px;border-radius:14px;font-weight:bold;margin:6px}
+.btn.secondary{background:#d9c1a6;color:#2f241b}
+.center{text-align:center}
+.stats{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin:18px 0}
+.stat{background:#efe0cc;padding:10px 15px;border-radius:12px;font-weight:bold}
+.drawbox{text-align:center;padding:28px 10px}
+.envelope{width:min(330px,90%);margin:15px auto;padding:30px 18px;background:#ead4b8;border-radius:18px;border:3px dashed #9a6b45}
+.envelope h2{margin:5px 0 10px}.recipe{margin-top:18px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.panel{background:#fff;border-radius:16px;padding:16px}
+li{margin:7px 0}.timer{font-size:34px;font-weight:bold;letter-spacing:1px}
+.progress{height:12px;background:#dfd2c2;border-radius:99px;overflow:hidden}.bar{height:100%;width:0;background:#7b3f24;transition:.3s}
+.score{font-size:25px;font-weight:bold}
+@media(max-width:650px){.grid{grid-template-columns:1fr}.card{padding:17px}.btn{width:100%;margin:5px 0}}
 </style>
 </head>
 <body>
-<div class="container">
-<h1>🎡 גלגל המתכון</h1>
-<div class="subtitle">דלת המתכון • כל שחקן מגריל מנה אחרת</div>
-
-<div class="game">
-  <div class="players">
-    <input id="playerName" placeholder="שם השחקן (אופציונלי)">
-  </div>
-  <div class="wheelWrap">
-    <canvas id="wheel" width="800" height="800"></canvas>
-    <div class="pointer"></div>
-  </div>
-  <button id="spinBtn" onclick="spin()">🎯 הגרל לי מתכון</button>
-  <div class="result" id="result">
-    <h2>מי הבא?</h2>
-    <p>לחצו על הכפתור והגלגל יבחר מתכון.</p>
-  </div>
-  <div class="small">כל הגרלה בוחרת מתכון מתוך 18 המנות שבנינו.</div>
+<div id="start" class="hero">
+  <main class="wrap card center">
+    <img class="cover" src="assets/cover.png" alt="משחק הבישול">
+    <h1>🍳 משחק הבישול</h1>
+    <div class="sub">שלוף את המתכון שלך</div>
+    <p>כל שחקן מקבל פתק אקראי עם מתכון שהוא צריך לבשל.</p>
+    <div class="stats"><div class="stat">12 מתכונים</div><div class="stat">45 דקות</div><div class="stat">עד 1200 נקודות</div></div>
+    <button class="btn" onclick="startGame()">מתחילים 🎲</button>
+  </main>
 </div>
 
-<h2 style="margin-top:38px">📖 כל 18 המתכונים</h2>
-<div class="grid" id="recipeGrid"></div>
+<div id="game" class="hidden">
+ <div class="wrap">
+  <div class="card">
+   <div class="center">
+    <h1>🎴 שלוף את המתכון שלך</h1>
+    <div class="stats">
+      <div class="stat">⏱️ <span id="timer">45:00</span></div>
+      <div class="stat">⭐ <span id="score">0</span></div>
+      <div class="stat">📖 <span id="done">0</span>/12</div>
+    </div>
+    <div class="progress"><div id="bar" class="bar"></div></div>
+   </div>
+   <div id="drawArea" class="drawbox">
+    <div class="envelope">
+      <div style="font-size:50px">✉️</div>
+      <h2>הפתק שלך מחכה</h2>
+      <p>לחץ על הכפתור וקבל את המתכון שלך.</p>
+    </div>
+    <button class="btn" onclick="drawRecipe()">שלוף פתק 🎴</button>
+   </div>
+   <div id="recipeArea" class="recipe hidden"></div>
+   <div class="center">
+     <button id="finishBtn" class="btn secondary hidden" onclick="finishRecipe()">סיימתי לבשל ✓</button>
+     <button id="nextBtn" class="btn hidden" onclick="drawRecipe()">שלוף פתק נוסף</button>
+   </div>
+  </div>
+ </div>
 </div>
 
-<div class="modal" id="modal">
-  <div class="modal-content" id="modalContent">
-    <button class="modal-close" onclick="closeModal()">✕</button>
-  </div>
+<div id="end" class="hero hidden">
+ <main class="wrap card center">
+  <h1>🏆 סיימתם!</h1>
+  <p class="score">הניקוד שלך: <span id="finalScore">0</span></p>
+  <p>כל הכבוד, השף! סיימת את אתגר המתכונים.</p>
+  <button class="btn" onclick="location.reload()">משחק חדש 🔄</button>
+ </main>
 </div>
 
 <script>
 const recipes = [
-  {name:'סופריטו כרעיים ותפוחי אדמה',ingredients:['800 גרם כרעים',
-'600 גרם תפוחי אדמה',
-'200 גרם בצל',
-'6 שיני שום',
-'3 עגבניות'],steps:['חוותכים את הכרעים לקוביות','מחממים שמן בסיר כבד','מחזירים את הכרעים עד להטמעה כניה','מוסיפים בצל ושום','מוסיפים תפוחי אדמה קטנים','תבלים במלח וקורילנדר','משהים 35 דקות עד רכיכות']},
-  {name:'צ\'יקן קורמה כרעיים + נאן',ingredients:['800 גרם עוף',
-'250 גרם יוגורט',
-'3 כפיות קורי',
-'200 מל קוקוס חלב',
-'3 עגבניות',
-'2 בצלים'],steps:['מחממים שמן בסיר','מטגנים עוף עד זהוב','מוסיפים בצל וקורי','מחזיקים עד בישול','מוסיפים יוגורט וקוקוס חלב','משהים 20 דקות','מגישים עם נאן חם']},
-  {name:'ריזוטו פטריות ופרמזן',ingredients:['300 גרם אורז ריזוטו',
-'400 גרם פטריות',
-'1 בצל',
-'200 מל יין לבן',
-'1 ליטר מרק',
-'100 גרם פרמזן',
-'50 גרם חמאה'],steps:['מתופפים את המרק','מטגנים בצל','מוסיפים אורז','שופכים יין','מוסיפים מרק בהדרגה','מטגנים פטריות בצד','מוסיפים פטריות',
-'מערבבים בחמאה ופרמזן']},
-  {name:'רביולו חלמון + בר בלאן אנשובי ושאלוט',ingredients:['400 גרם קמח',
-'200 גרם ביצה',
-'4 חלמונים',
-'200 גרם בר בלאן',
-'6 אנשובים',
-'2 שאלוטים',
-'מלח ופפריקה'],steps:['מכינים בצק בקמח וביצה',
-'משהים חצי שעה',
-'מכינים מילוי: דגים וחלמונים',
-'יוצרים רביולו בעלי דקים',
-'משלים בתבנית שמן חם',
-'מגישים עם בר בלאן זהוב']},
-  {name:'ברוסקטה טרטר לברק + איולי יוזו',ingredients:['1 לחם סיאבטה',
-'400 גרם דג טרי',
-'200 גרם לברק',
-'3 לימונים',
-'2 אצוגים',
-'100 מל שמן זית',
-'1 צלף'],steps:['חותכים לחם לפרוסות',
-'קולים בתנור',
-'מבשלים טרטר: דג עדין + לברק + אצוג',
-'מכינים איולי יוזו',
-'מרחים על הפרוסות',
-'מקצף על גבי הטרטר']},
-  {name:'טארטלט פילו לימון ופטל',ingredients:['8 דפי פילו',
-'200 גרם אגוזי לוז',
-'150 מל קרם לימון',
-'100 גרם פטל',
-'50 גרם סוכר',
-'2 ביצים',
-'50 גרם חמאה'],steps:['מגלגלים דפי פילו בתבנית',
-'קולים בתנור עד ריאנה',
-'מכינים קרם לימון עדין',
-'מוזגים לתוך הטארטלט',
-'קולים 12 דקות',
-'מקשטים בפטל טרי']},
-  {name:'גאנש מוקצף + קראמבל שמן זית',ingredients:['200 גרם שוקולד',
-'150 מל קרם',
-'100 גרם קמח',
-'80 גרם שמן זית',
-'30 גרם סוכר',
-'50 גרם ענבים קפואים'],steps:['מוסיקים גאנש: שוקולד וקרם',
-'קולים לקרה',
-'מקצפים בטלוויזיה',
-'מכינים קראמבל: קמח וזית וסוכר',
-'קולים 12 דקות',
-'מחברים עם ענבים']},
-  {name:'ניוקי לה רומנה + קרם תרד',ingredients:['500 מל חלב',
-'100 גרם סמולינה',
-'50 גרם פרמזן',
-'250 גרם תרד',
-'100 גרם קרם',
-'3 שיני שום',
-'מלח ופלפל'],steps:['מחממים חלב',
-'מוזגים סמולינה',
-'מוסיפים פרמזן',
-'יוצרים דיסקים וקולים',
-'מכינים קרם תרד',
-'מגלגלים בקרם']},
-  {name:'טרטר טונה במעטפת לחם + חלבון',ingredients:['400 גרם טונה',
-'200 גרם לחם בוקט',
-'3 ביצים',
-'100 מל מיו',
-'2 לימונים',
-'1 צלף',
-'מלח ופפריקה'],steps:['בוררים טונה טרי',
-'מוסיפים מיו ולימון',
-'תבלים בפלפל',
-'יוצרים עדשות מלחם',
-'מטגנים בשמן',
-'מגישים עם חלבון ביצה']},
-  {name:'ספיחה בשרית',ingredients:['600 גרם בשר טחון',
-'200 גרם בצל',
-'4 שיני שום',
-'100 גרם פירורי לחם',
-'2 ביצים',
-'200 מל רוטב עגבניות',
-'תבלים'],steps:['מטגנים בצל',
-'מערבבים בשר עם ביצים ופירור',
-'יוצרים כדורים',
-'קולים בתנור',
-'מוסיפים רוטב עגבניות',
-'משהים 25 דקות']},
-  {name:'פחזנית לוז + קרמל + אנגלז גזר',ingredients:['150 גרם אגוזי לוז',
-'100 גרם סוכר לקרמל',
-'200 מל קרם',
-'150 גרם גזר',
-'1 בד וניל',
-'50 גרם שוקולד'],steps:['קולים אגוזים',
-'מכינים קרמל זהוב',
-'מוזגים אגוזים בקרמל',
-'קולים על קרח',
-'מכינים אנגלז גזר-וניל',
-'מייצרים פחזנית בתבנית']},
-  {name:'בורלה אגסים עם קרקר וקרם וניל',ingredients:['4 אגסים',
-'100 גרם שוקולד',
-'150 גרם קרם וניל',
-'80 גרם קרקר',
-'50 גרם חמאה',
-'30 גרם סוכר'],steps:['חוותכים אגסים',
-'מטגנים בחמאה וסוכר',
-'מכינים קרם וניל',
-'יוצרים קרקר בתנור',
-'מערבבים עם חמאה',
-'מגלגלים בקרם ובקרקר']},
-  {name:'בוריקיטס חצילים',ingredients:['3 חצילים',
-'200 גרם גבינה לבנה',
-'100 גרם בזיליקום',
-'8 דפי דינסטי',
-'50 גרם שמן זית',
-'מלח ופפריקה'],steps:['מטגנים חצילים',
-'מערבבים עם גבינה ובזיליקום',
-'יוצרים קטעי בוריקה',
-'מגלגלים בדפי דינסטי',
-'קולים עד זהוב']},
-  {name:'טורטליני דלעת + פריזיאן דלעת',ingredients:['400 גרם קמח',
-'3 ביצים',
-'400 גרם דלעת',
-'100 גרם פרמזן',
-'50 גרם חמאה',
-'תבלים'],steps:['מכינים בצק בקמח וביצה',
-'מבשלים דלעת',
-'מערבבים עם פרמזן',
-'יוצרים טורטליני קטנים',
-'משלים בתבנית מים חמים',
-'מקשטים בפריזיאן']},
-  {name:'טטאקי טונה + ראגו בורגול + ציר דגים',ingredients:['400 גרם טונה',
-'150 גרם בורגול',
-'100 גרם בצל',
-'200 מל מרק דגים',
-'50 מל סויה',
-'1 צלף'],steps:['אוטים בורגול',
-'מטגנים טונה בחיצוני בלבד',
-'מכינים ראגו: בורגול ובצל',
-'משלימים בניירות',
-'מכינים ציר דגים',
-'מגישים בצורת לירה']},
-  {name:'סינטה צרובה + פטל + קצף סלק',ingredients:['200 גרם בצק פילו',
-'100 גרם סוכר',
-'150 גרם פטל',
-'100 גרם סלק',
-'50 מל קרם',
-'מלח דקה'],steps:['צורבים בצק בתנור',
-'יוצרים הצורה של סינתה',
-'מטגנים פטל בעדינות',
-'מכינים קצף סלק קר',
-'מגלגלים בתוך הסינתה']},
-  {name:'קבב דג + קרם גזר',ingredients:['400 גרם דג לבן',
-'100 גרם פירורי לחם',
-'2 ביצים',
-'150 גרם גזר',
-'100 מל קרם',
-'תבלים'],steps:['מטחנים דג',
-'מערבבים עם פירור וביצה',
-'יוצרים קבבים',
-'טגנים בשמן',
-'מכינים קרם גזר',
-'מגישים עם קצף']},
-  {name:'ברולה פטל',ingredients:['400 מל קרם',
-'100 גרם סוכר',
-'200 גרם פטל',
-'1 בד וניל',
-'4 חלמונים'],steps:['מחממים קרם עם וניל',
-'מערבבים עם חלמונים',
-'משפכים לכוסות',
-'קולים בתנור מימי',
-'קופאים בלילה',
-'צורבים סוכר עליון']}
+{name:"ים כתום — בויאבז בטטה וקונפי לוקוס",ing:["1 בטטה גדולה","1 בצל","½ שומר","2 שיני שום","500 מ״ל ציר דגים","קורט זעפרן","גרידת תפוז","300 גרם לוקוס","שמן זית","לימון","עשבי תיבול"],steps:["צולים את הבטטה ומבשלים עם בצל, שומר ושום.","מוסיפים ציר, זעפרן וגרידת תפוז ומבשלים עד ריכוך.","טוחנים לקרם כתום חלק ומתבלים בלימון.","מבשלים בעדינות את הלוקוס בשמן זית עם שום ועשבים.","מגישים את הקרם, מעליו את הדג ומסיימים בשמן עשבים."],tip:"שמרו על צבע כתום נקי ועל דג עסיסי."},
+{name:"רביולי דלעת — חמאה חומה ולימון",ing:["12 רביולי דלעת","60 גרם חמאה","½ לימון","מרווה","30 גרם אגוזים","מלח","פרמזן"],steps:["מבשלים את הרביולי במים מומלחים.","ממיסים חמאה עד שהיא מזהיבה ומריחה אגוזית.","מוסיפים מרווה, מיץ וגרידת לימון.","מעבירים את הרביולי לחמאה ומצפים.","מגישים עם אגוזים ופרמזן."],tip:"החמאה צריכה להיות זהובה ולא שרופה."},
+{name:"טרטר סינטה — חלמון, בצל מוחמץ וקראנץ׳ תפוח אדמה",ing:["200 גרם סינטה טרייה","1 חלמון","בצל סגול","חומץ","סוכר","תפוח אדמה","שמן זית","חרדל","עירית"],steps:["חותכים את הסינטה לקוביות קטנות ושומרים קרה.","מכינים בצל מוחמץ בחומץ ומעט סוכר.","מכינים קרם חלמון עם חרדל ושמן זית.","פורסים תפוח אדמה דק ואופים/מטגנים לקראנץ׳.","מסדרים את הטרטר, הקרם, הבצל והקראנץ׳."],tip:"אם מכינים טרטר בבית, השתמשו בבשר שמיועד להכנה נא, שמרו קר מאוד והגישו מיד."},
+{name:"טרטר טונה — קרם כרוב וחלבון ביצה נסתר",ing:["200 גרם טונה טרייה","כרוב","יוגורט או שמנת","1 חלבון ביצה מבושל","לימון","שמן זית","עירית","מלח"],steps:["מבשלים את חלבון הביצה עד שהוא יציב וקוצצים.","טוחנים כרוב עם יוגורט, לימון ושמן זית לקרם.","מתבלים את הטונה בקוביות קטנות עם לימון ועירית.","מניחים את חלבון הביצה בתוך הקרם כך שיישאר נסתר.","מעליו מניחים את טרטר הטונה ומגישים עם כף לגילוי השכבה."],tip:"הסוד הוא שהחלבון באמת לא ייראה לפני הביס."},
+{name:"טארטלט פילו מלוח — גבינת עיזים, לימון ובצל מקורמל",ing:["3 דפי פילו","100 גרם גבינת עיזים","½ בצל גדול","½ לימון","שמן זית","טימין","מלח"],steps:["מרפדים תבנית קטנה בכמה שכבות פילו ומשמנים קלות.","אופים עד הזהבה ופריכות.","מקרמלים בצל על אש נמוכה.","מערבבים גבינת עיזים עם לימון וטימין.","ממלאים את הקלתית בגבינה ומסיימים בבצל."],tip:"מלאו את הפילו סמוך להגשה כדי לשמור על הפריכות."},
+{name:"ברבוניה — קרם תירס צלוי, לימון ושמן עשבים",ing:["2–3 ברבוניות מפולטות","2 קלחי תירס","חמאה","½ לימון","עשבי תיבול","שמן זית","מלח"],steps:["צולים את התירס עד שיש סימני חריכה.","מפרידים גרגרים וטוחנים עם מעט חמאה ומים לקרם.","צורבים את הברבוניה בעדינות.","מכינים שמן עשבים מהיר.","מגישים קרם תירס, דג, לימון ושמן עשבים."],tip:"החריכה בתירס נותנת לקרם עומק."},
+{name:"לברק קראנצ׳י — קמח אורז, קרם עשבים ולימון",ing:["פילה לברק","קמח אורז","עשבי תיבול","יוגורט","לימון","שמן זית","מלח"],steps:["מתבלים את לברק ומצפים בשכבה דקה של קמח אורז.","צורבים את הדג עד שהעור פריך והדג עשוי.","מערבבים יוגורט, עשבים ולימון לקרם.","מניחים קרם בצלחת ומעליו את הדג.","מסיימים בגרידת לימון ועשבים."],tip:"שכבת קמח האורז צריכה להיות דקה מאוד."},
+{name:"גנאש מוקצף — קראמבל שמן זית וענבים קפואים",ing:["150 גרם שוקולד","150 מ״ל שמנת","50 גרם קמח","30 גרם שמן זית","ענבים קפואים","קורט מלח"],steps:["מחממים שמנת ויוצקים על השוקולד ליצירת גנאש.","מקררים ומקציפים עד מרקם אוורירי.","מערבבים קמח ושמן זית לקראמבל ואופים עד פריכות.","מניחים גנאש בצלחת.","מוסיפים קראמבל וענבים קפואים ומסיימים במעט מלח."],tip:"אל תקציפו את הגנאש יתר על המידה."},
+{name:"ברבוניות בטמפורה — קרם לימון, עשבים ואלמנט חמוץ",ing:["ברבוניות מפולטות","קמח","קורנפלור","מים קרים מאוד","לימון","יוגורט","מלפפון חמוץ או בצל מוחמץ","עשבים","שמן לטיגון"],steps:["מערבבים בלילה קלה מקמח, קורנפלור ומים קרים.","מצפים את הברבוניות בשכבה דקה.","מטגנים בזהירות עד הזהבה ופריכות.","מערבבים יוגורט עם לימון לקרם.","מגישים עם הקרם, עשבים ואלמנט חמוץ."],tip:"הבלילה צריכה להישאר קרה וקלילה."},
+{name:"ברולה אגסים — שכבות אגס וקרקר פריך",ing:["2 אגסים","סוכר","לימון","קרקר דק","וניל"],steps:["פורסים אגסים לפרוסות דקות.","מסדרים שכבות אגס עם מעט סוכר ביניהן.","מקרמלים שכבה דקה של סוכר מעל.","מוסיפים וניל וגרידת לימון.","מגישים עם חתיכת קרקר פריך."],tip:"המטרה היא שכבות דקות ועדינות, לא קינוח כבד."},
+{name:"הליבוט — קשקשי גזר ואנגלז גזר־וניל",ing:["2 פילטים הליבוט","2 גזרים","50 מ״ל שמנת","חלמון","וניל","חמאה","לימון","עשבי תיבול"],steps:["פורסים גזר דק מאוד ומניחים חופף על הדג כמו קשקשים.","אופים/צורבים בעדינות עד שהדג מוכן והגזר מתרכך.","מכינים אנגלז גזר־וניל עדין.","מניחים את האנגלז בבריכה קטנה בצד הצלחת.","מניחים את ההליבוט במרכז ומסיימים בלימון ועשבים."],tip:"האנגלז מוגש בצד — לא מכסים איתו את הדג."},
+{name:"ניוקי אלה רומנה — דג מפורק, קרם לימון ושמן עשבים",ing:["סולת","חלב","חמאה","פרמזן","300 גרם דג לבן","לימון","עשבי תיבול","שמן זית"],steps:["מבשלים סולת עם חלב עד שהיא מסמיכה.","מערבבים חמאה ופרמזן, משטחים ומקררים.","חותכים עיגולים/פרוסות וצורבים עד הזהבה.","מבשלים את הדג ומפוררים לפתיתים.","מכינים קרם לימון ומסדרים את הניוקי עם הדג מעל."],tip:"הגמר צריך להיות זהוב, קרמי ורענן."}
 ];
 
-const canvas=document.getElementById('wheel');
-const ctx=canvas.getContext('2d');
-const n=recipes.length;
-let rotation=0, spinning=false;
+let remaining=[], score=0, done=0, time=45*60, timerId=null;
 
-function drawWheel(){
-  const cx=400,cy=400,r=370;
-  ctx.clearRect(0,0,800,800);
-  const slice=Math.PI*2/n;
-  for(let i=0;i<n;i++){
-    const a=rotation+i*slice;
-    ctx.beginPath();ctx.moveTo(cx,cy);ctx.arc(cx,cy,r,a,a+slice);ctx.closePath();
-    ctx.fillStyle=`hsl(${i*360/n}, 68%, 48%)`;ctx.fill();
-    ctx.strokeStyle="#fff";ctx.lineWidth=3;ctx.stroke();
-    ctx.save();ctx.translate(cx,cy);ctx.rotate(a+slice/2);
-    ctx.textAlign="right";ctx.fillStyle="#fff";ctx.font="bold 22px Arial";
-    let text=recipes[i].name;
-    if(text.length>25) text=text.slice(0,24)+"…";
-    ctx.fillText(text,340,8);ctx.restore();
-  }
-  ctx.beginPath();ctx.arc(cx,cy,62,0,Math.PI*2);ctx.fillStyle="#fff";ctx.fill();
-  ctx.fillStyle="#7a3d18";ctx.font="bold 25px Arial";ctx.textAlign="center";ctx.fillText("מתכון",cx,cy+9);
+function startGame(){
+ document.getElementById("start").classList.add("hidden");
+ document.getElementById("game").classList.remove("hidden");
+ remaining=[...Array(recipes.length).keys()];
+ shuffle(remaining); update();
+ timerId=setInterval(()=>{time--;updateTimer();if(time<=0) endGame();},1000);
 }
-drawWheel();
-
-function renderRecipes(){
-  const grid=document.getElementById('recipeGrid');
-  grid.innerHTML=recipes.map((r,i)=>`
-    <div class="recipeCard" onclick="openModal(${i})">
-      <span class="num">${i+1}</span>
-      <h3>${r.name}</h3>
-    </div>
-  `).join('');
+function shuffle(a){for(let i=a.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}}
+function drawRecipe(){
+ if(!remaining.length){endGame();return}
+ const r=recipes[remaining.pop()];
+ document.getElementById("drawArea").classList.add("hidden");
+ const area=document.getElementById("recipeArea");
+ area.classList.remove("hidden");
+ area.innerHTML=`<div class="panel center"><div style="font-size:42px">📜</div><h2>${r.name}</h2><p><b>המשימה:</b> לבשל ולהגיש את המנה.</p></div>
+ <div class="grid"><div class="panel"><h3>🥕 חומרי גלם</h3><ul>${r.ing.map(x=>`<li>${x}</li>`).join("")}</ul></div>
+ <div class="panel"><h3>👨‍🍳 שלבי הכנה</h3><ol>${r.steps.map(x=>`<li>${x}</li>`).join("")}</ol></div></div>
+ <div class="panel"><h3>⭐ טיפ שף</h3><p>${r.tip}</p></div>`;
+ document.getElementById("finishBtn").classList.remove("hidden");
+ document.getElementById("nextBtn").classList.add("hidden");
 }
-renderRecipes();
-
-function openModal(index){
-  const r=recipes[index];
-  document.getElementById('modalContent').innerHTML=`
-    <button class="modal-close" onclick="closeModal()">✕</button>
-    <h2>${r.name}</h2>
-    <h3>🛒 מצרכים</h3>
-    <ul>${r.ingredients.map(i=>`<li>${i}</li>`).join('')}</ul>
-    <h3>👨‍🍳 הכנה</h3>
-    <ol>${r.steps.map(s=>`<li>${s}</li>`).join('')}</ol>
-  `;
-  document.getElementById('modal').classList.add('show');
+function finishRecipe(){
+ done++; score+=100; update();
+ document.getElementById("finishBtn").classList.add("hidden");
+ if(done>=12){endGame();return}
+ document.getElementById("nextBtn").classList.remove("hidden");
 }
-
-function closeModal(){
-  document.getElementById('modal').classList.remove('show');
-}
-
-function spin(){
- if(spinning)return;
- spinning=true;document.getElementById('spinBtn').disabled=true;
- const start=rotation;
- const extra=Math.PI*2*(6+Math.random()*4);
- const target=start+extra;
- const duration=4200;const t0=performance.now();
- function frame(now){
-   const p=Math.min(1,(now-t0)/duration);
-   const eased=1-Math.pow(1-p,4);
-   rotation=start+(target-start)*eased;
-   drawWheel();
-   if(p<1) requestAnimationFrame(frame);
-   else {
-     spinning=false;document.getElementById('spinBtn').disabled=false;
-     const slice=2*Math.PI/n;
-     let pointerAngle=-Math.PI/2;
-     let normalized=(pointerAngle-rotation)%(2*Math.PI);
-     if(normalized<0)normalized+=2*Math.PI;
-     const index=Math.floor(normalized/slice);
-     const name=document.getElementById('playerName').value.trim();
-     document.getElementById('result').innerHTML=
-       `<h2>🎉 ${name?name+" — ":""}יצא לכם:</h2><p style="cursor:pointer;color:#7a3d18" onclick="openModal(${index})"><b>${recipes[index].name}</b> (לחץ לפתיחת המתכון)</p>`;
-   }
- }
- requestAnimationFrame(frame);
-}
-
-window.closeModal=closeModal;
-window.openModal=openModal;
-window.spin=spin;
+function update(){document.getElementById("score").textContent=score;document.getElementById("done").textContent=done;document.getElementById("bar").style.width=(done/12*100)+"%";updateTimer()}
+function updateTimer(){let m=Math.floor(time/60),s=time%60;document.getElementById("timer").textContent=String(m).padStart(2,"0")+":"+String(s).padStart(2,"0")}
+function endGame(){clearInterval(timerId);document.getElementById("game").classList.add("hidden");document.getElementById("end").classList.remove("hidden");document.getElementById("finalScore").textContent=score}
 </script>
 </body>
 </html>
