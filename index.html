@@ -3,145 +3,85 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>משחק הבישול — שלוף את המתכון שלך</title>
+<title>To‑Do (localStorage) — משחק הבישול</title>
 <style>
-*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#f6efe4;color:#2f241b}
-button{font:inherit;cursor:pointer;border:0}.hidden{display:none!important}
-.wrap{max-width:900px;margin:auto;padding:18px}
-.hero{min-height:100vh;display:flex;align-items:center;justify-content:center}
-.card{background:#fffaf2;border-radius:24px;padding:24px;box-shadow:0 12px 35px #0002}
-.cover{width:100%;max-height:330px;object-fit:cover;border-radius:18px;margin-bottom:18px}
-h1{font-size:clamp(30px,7vw,54px);margin:8px 0}.sub{font-size:20px;color:#73553b}
-.btn{background:#7b3f24;color:white;padding:15px 22px;border-radius:14px;font-weight:bold;margin:6px}
-.btn.secondary{background:#d9c1a6;color:#2f241b}
-.center{text-align:center}
-.stats{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin:18px 0}
-.stat{background:#efe0cc;padding:10px 15px;border-radius:12px;font-weight:bold}
-.drawbox{text-align:center;padding:28px 10px}
-.envelope{width:min(330px,90%);margin:15px auto;padding:30px 18px;background:#ead4b8;border-radius:18px;border:3px dashed #9a6b45}
-.envelope h2{margin:5px 0 10px}.recipe{margin-top:18px}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-.panel{background:#fff;border-radius:16px;padding:16px}
-li{margin:7px 0}.timer{font-size:34px;font-weight:bold;letter-spacing:1px}
-.progress{height:12px;background:#dfd2c2;border-radius:99px;overflow:hidden}.bar{height:100%;width:0;background:#7b3f24;transition:.3s}
-.score{font-size:25px;font-weight:bold}
-@media(max-width:650px){.grid{grid-template-columns:1fr}.card{padding:17px}.btn{width:100%;margin:5px 0}}
-details{background:#fffaf2;border-radius:12px;padding:12px;margin-top:12px;border:1px solid #ead4b8}
-summary{font-weight:bold;cursor:pointer}
+:root{--bg:#f7f7fb;--card:#ffffff;--accent:#7b3f24;--muted:#6b7280;--danger:#ef4444}
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:#111}
+.wrap{max-width:900px;margin:32px auto;padding:18px}
+.card{background:var(--card);border-radius:12px;padding:18px;box-shadow:0 8px 22px rgba(0,0,0,.06)}
+h1{margin:0 0 8px;font-size:26px}
+.subtitle{color:var(--muted);margin-bottom:12px}
+.input-row{display:flex;gap:8px;margin-bottom:12px}
+input[type=text]{flex:1;padding:10px;border-radius:8px;border:1px solid #e6e9f2}
+.btn{background:var(--accent);color:#fff;padding:10px 14px;border-radius:8px;border:0;cursor:pointer}
+.btn.secondary{background:#eef2ff;color:var(--accent);border:1px solid rgba(79,70,229,.08)}
+.controls{display:flex;gap:8px;align-items:center;margin-bottom:12px}
+.count{margin-left:auto;color:var(--muted)}
+ul.list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+li.item{display:flex;align-items:center;gap:8px;padding:10px;border-radius:8px;border:1px solid #f1f3f8;background:#fff}
+li.item.done{opacity:.6;text-decoration:line-through;color:var(--muted)}
+.editable{width:100%;border:1px solid #e6e9f2;padding:8px;border-radius:6px}
+.actions{display:flex;gap:8px}
+.small{font-size:12px;color:var(--muted)}
+.clear{background:transparent;border:0;color:var(--danger);cursor:pointer}
+@media(max-width:520px){.wrap{padding:12px;margin:16px}}
 </style>
 </head>
 <body>
-<div id="start" class="hero">
-  <main class="wrap card center">
-    <img class="cover" src="assets/cover.png" alt="משחק הבישול">
-    <h1>🍳 משחק הבישול</h1>
-    <div class="sub">שלוף את המתכון שלך</div>
-    <p>כל שחקן מקבל פתק אקראי עם מתכון שהוא צריך לבשל.</p>
-    <div class="stats"><div class="stat">12 מתכונים</div><div class="stat">45 דקות</div><div class="stat">עד 1200 נקודות</div></div>
+<main class="wrap">
+  <section class="card">
+    <h1>📝 רשימת משימות — שמור ב‑localStorage</h1>
+    <div class="subtitle">הוסף משימות, סמנן כבוצע, ערוך ומחק — הכל נשמר בדפדפן.</div>
 
-    <details open>
-      <summary>איך משחקים</summary>
-      <ol style="text-align:right;margin:12px 0 0 0;padding-left:18px">
-        <li>פותחים את <code>index.html</code>.</li>
-        <li>לוחצים "מתחילים".</li>
-        <li>כל שחקן שולף פתק אקראי עם מתכון.</li>
-        <li>מבשלים במשך 45 דקות.</li>
-        <li>מסמנים "סיימתי לבשל" ומקבלים 100 נקודות.</li>
-        <li>המטרה: להשלים את 12 המתכונים ולצבור עד 1200 נקודות.</li>
-      </ol>
-      <p style="text-align:right;margin-top:8px">להפעלת GitHub Pages: העלו את <code>index.html</code> ואת תיקיית <code>assets</code> ל־repository ובחרו Settings → Pages → branch: <code>main</code> → folder: <code>/root</code>.</p>
-    </details>
-
-    <button class="btn" onclick="startGame()">מתחילים 🎲</button>
-  </main>
-</div>
-
-<div id="game" class="hidden">
- <div class="wrap">
-  <div class="card">
-   <div class="center">
-    <h1>🎴 שלוף את המתכון שלך</h1>
-    <div class="stats">
-      <div class="stat">⏱️ <span id="timer">45:00</span></div>
-      <div class="stat">⭐ <span id="score">0</span></div>
-      <div class="stat">📖 <span id="done">0</span>/12</div>
+    <div class="input-row">
+      <input id="taskInput" type="text" placeholder="כתוב משימה חדשה ולחץ Enter" aria-label="new task">
+      <button id="addBtn" class="btn">הוסף</button>
     </div>
-    <div class="progress"><div id="bar" class="bar"></div></div>
-   </div>
-   <div id="drawArea" class="drawbox">
-    <div class="envelope">
-      <div style="font-size:50px">✉️</div>
-      <h2>הפתק שלך מחכה</h2>
-      <p>לחץ על הכפתור וקבל את המתכון שלך.</p>
-    </div>
-    <button class="btn" onclick="drawRecipe()">שלוף פתק 🎴</button>
-   </div>
-   <div id="recipeArea" class="recipe hidden"></div>
-   <div class="center">
-     <button id="finishBtn" class="btn secondary hidden" onclick="finishRecipe()">סיימתי לבשל ✓</button>
-     <button id="nextBtn" class="btn hidden" onclick="drawRecipe()">שלוף פתק נוסף</button>
-   </div>
-  </div>
- </div>
-</div>
 
-<div id="end" class="hero hidden">
- <main class="wrap card center">
-  <h1>🏆 סיימתם!</h1>
-  <p class="score">הניקוד שלך: <span id="finalScore">0</span></p>
-  <p>כל הכבוד, השף! סיימת את אתגר המתכונים.</p>
-  <button class="btn" onclick="location.reload()">משחק חדש 🔄</button>
- </main>
-</div>
+    <div class="controls">
+      <div class="filters">
+        <button class="btn secondary" data-filter="all">הכל</button>
+        <button class="btn secondary" data-filter="active">פעילות</button>
+        <button class="btn secondary" data-filter="completed">בוצע</button>
+      </div>
+      <div class="count" id="count">0 פריטים</div>
+    </div>
+
+    <ul id="list" class="list"></ul>
+
+    <footer style="margin-top:12px;display:flex;justify-content:space-between;align-items:center">
+      <div>
+        <button id="clearCompleted" class="clear">נקה בוצעו</button>
+        <button id="clearAll" class="clear">נקה הכל</button>
+      </div>
+      <div class="small">עצה: הקלק כפול על פריט לעריכה</div>
+    </footer>
+
+  </section>
+</main>
 
 <script>
-const recipes = [
-{name:"ים כתום — בויאבז בטטה וקונפי לוקוס",ing:["1 בטטה גדולה","1 בצל","½ שומר","2 שיני שום","500 מ״ל ציר דגים","קורט זעפרן","גרידת תפוז","300 גרם לוקוס","שמן זית","לימון","עשבי תיבול"],steps:["צולים את הבטטה ומבשלים עם בצל, שומר ושום.","מוסיפים ציר, זעפרן וגרידת תפוז ומבשלים עד ריכוך.","טוחנים לקרם כתום חלק ומתבלים בלימון.","מבשלים בעדינות את הלוקוס בשמן זית עם שום ועשבים.","מגישים את הקרם, מעליו את הדג ומסיימים בשמן עשבים."],tip:"שמרו על צבע כתום נקי ועל דג עסיסי."},
-{name:"רביולי דלעת — חמאה חומה ולימון",ing:["12 רביולי דלעת","60 גרם חמאה","½ לימון","מרווה","30 גרם אגוזים","מלח","פרמזן"],steps:["מבשלים את הרביולי במים מומלחים.","ממיסים חמאה עד שהיא מזהיבה ומריחה אגוזית.","מוסיפים מרווה, מיץ וגרידת לימון.","מעבירים את הרביולי לחמאה ומצפים.","מגישים עם אגוזים ופרמזן."],tip:"החמאה צריכה להיות זהובה ולא שרופה."},
-{name:"טרטר סינטה — חלמון, בצל מוחמץ וקראנץ׳ תפוח אדמה",ing:["200 גרם סינטה טרייה","1 חלמון","בצל סגול","חומץ","סוכר","תפוח אדמה","שמן זית","חרדל","עירית"],steps:["חותכים את הסינטה לקוביות קטנות ושומרים קרה.","מכינים בצל מוחמץ בחומץ ומעט סוכר.","מכינים קרם חלמון עם חרדל ושמן זית.","פורסים תפוח אדמה דק ואופים/מטגנים לקראנץ׳.","מסדרים את הטרטר, הקרם, הבצל והקראנץ׳."],tip:"אם מכינים טרטר בבית, השתמשו בבשר שמיועד להכנה נא, שמרו קר מאוד והגישו מיד."},
-{name:"טרטר טונה — קרם כרוב וחלבון ביצה נסתר",ing:["200 גרם טונה טרייה","כרוב","יוגורט או שמנת","1 חלבון ביצה מבושל","לימון","שמן זית","עירית","מלח"],steps:["מבשלים את חלבון הביצה עד שהוא יציב וקוצצים.","טוחנים כרוב עם יוגורט, לימון ושמן זית לקרם.","מתבלים את הטונה בקוביות קטנות עם לימון ועירית.","מניחים את חלבון הביצה בתוך הקרם כך שיישאר נסתר.","מעליו מניחים את טרטר הטונה ומגישים עם כף לגילוי השכבה."],tip:"הסוד הוא שהחלבון באמת לא ייראה לפני הביס."},
-{name:"טארטלט פילו מלוח — גבינת עיזים, לימון ובצל מקורמל",ing:["3 דפי פילו","100 גרם גבינת עיזים","½ בצל גדול","½ לימון","שמן זית","טימין","מלח"],steps:["מרפדים תבנית קטנה בכמה שכבות פילו ומשמנים קלות.","אופים עד הזהבה ופריכות.","מקרמלים בצל על אש נמוכה.","מערבבים גבינת עיזים עם לימון וטימין.","ממלאים את הקלתית בגבינה ומסיימים בבצל."],tip:"מלאו את הפילו סמוך להגשה כדי לשמור על הפריכות."},
-{name:"ברבוניה — קרם תירס צלוי, לימון ושמן עשבים",ing:["2–3 ברבוניות מפולטות","2 קלחי תירס","חמאה","½ לימון","עשבי תיבול","שמן זית","מלח"],steps:["צולים את התירס עד שיש סימני חריכה.","מפרידים גרגרים וטוחנים עם מעט חמאה ומים לקרם.","צורבים את הברבוניה בעדינות.","מכינים שמן עשבים מהיר.","מגישים קרם תירס, דג, לימון ושמן עשבים."],tip:"החריכה בתירס נותנת לקרם עומק."},
-{name:"לברק קראנצ׳י — קמח אורז, קרם עשבים ולימון",ing:["פילה לברק","קמח אורז","עשבי תיבול","יוגורט","לימון","שמן זית","מלח"],steps:["מתבלים את לברק ומצפים בשכבה דקה של קמח אורז.","צורבים את הדג עד שהעור פריך והדג עשוי.","מערבבים יוגורט, עשבים ולימון לקרם.","מניחים קרם בצלחת ומעליו את הדג.","מסיימים בגרידת לימון ועשבים."],tip:"שכבת קמח האורז צריכה להיות דקה מאוד."},
-{name:"גנאש מוקצף — קראמבל שמן זית וענבים קפואים",ing:["150 גרם שוקולד","150 מ״ל שמנת","50 גרם קמח","30 גרם שמן זית","ענבים קפואים","קורט מלח"],steps:["מחממים שמנת ויוצקים על השוקולד ליצירת גנאש.","מקררים ומקציפים עד מרקם אוורירי.","מערבבים קמח ושמן זית לקראמבל ואופים עד פריכות.","מניחים גנאש בצלחת.","מוסיפים קראמבל וענבים קפואים ומסיימים במעט מלח."],tip:"אל תקציפו את הגנאש יתר על המידה."},
-{name:"ברבוניות בטמפורה — קרם לימון, עשבים ואלמנט חמוץ",ing:["ברבוניות מפולטות","קמח","קורנפלור","מים קרים מאוד","לימון","יוגורט","מלפפון חמוץ או בצל מוחמץ","עשבים","שמן לטיגון"],steps:["מערבבים בלילה קלה מקמח, קורנפלור ומים קרים.","מצפים את הברבוניות בשכבה דקה.","מטגנים בזהירות עד הזהבה ופריכות.","מערבבים יוגורט עם לימון לקרם.","מגישים עם הקרם, עשבים ואלמנט חמוץ."],tip:"הבלילה צריכה להישאר קרה וקלילה."},
-{name:"ברולה אגסים — שכבות אגס וקרקר פריך",ing:["2 אגסים","סוכר","לימון","קרקר דק","וניל"],steps:["פורסים אגסים לפרוסות דקות.","מסדרים שכבות אגס עם מעט סוכר ביניהן.","מקרמלים שכבה דקה של סוכר מעל.","מוסיפים וניל וגרידת לימון.","מגישים עם חתיכת קרקר פריך."],tip:"המטרה היא שכבות דקות ועדינות, לא קינוח כבד."},
-{name:"הליבוט — קשקשי גזר ואנגלז גזר־וניל",ing:["2 פילטים הליבוט","2 גזרים","50 מ״ל שמנת","חלמון","וניל","חמאה","לימון","עשבי תיבול"],steps:["פורסים גזר דק מאוד ומניחים חופף על הדג כמו קשקשים.","אופים/צורבים בעדינות עד שהדג מוכן והגזר מתרכך.","מכינים אנגלז גזר־וניל עדין.","מניחים את האנגלז בבריכה קטנה בצד הצלחת.","מניחים את ההליבוט במרכז ומסיימים בלימון ועשבים."],tip:"האנגלז מוגש בצד — לא מכסים איתו את הדג."},
-{name:"ניוקי אלה רומנה — דג מפורק, קרם לימון ושמן עשבים",ing:["סולת","חלב","חמאה","פרמזן","300 גרם דג לבן","לימון","עשבי תיבול","שמן זית"],steps:["מבשלים סולת עם חלב עד שהיא מסמיכה.","מערבבים חמאה ופרמזן, משטחים ומקררים.","חותכים עיגולים/פרוסות וצורבים עד הזהבה.","מבשלים את הדג ומפוררים לפתיתים.","מכינים קרם לימון ומסדרים את הניוקי עם הדג מעל."],tip:"הגמר צריך להיות זהוב, קרמי ורענן."}
-];
-
-let remaining=[], score=0, done=0, time=45*60, timerId=null;
-
-function startGame(){
- document.getElementById("start").classList.add("hidden");
- document.getElementById("game").classList.remove("hidden");
- remaining=[...Array(recipes.length).keys()];
- shuffle(remaining); update();
- timerId=setInterval(()=>{time--;updateTimer();if(time<=0) endGame();},1000);
-}
-function shuffle(a){for(let i=a.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}}
-function drawRecipe(){
- if(!remaining.length){endGame();return}
- const r=recipes[remaining.pop()];
- document.getElementById("drawArea").classList.add("hidden");
- const area=document.getElementById("recipeArea");
- area.classList.remove("hidden");
- area.innerHTML=`<div class="panel center"><div style="font-size:42px">📜</div><h2>${r.name}</h2><p><b>המשימה:</b> לבשל ולהגיש את המנה.</p></div>
- <div class="grid"><div class="panel"><h3>🥕 חומרי גלם</h3><ul>${r.ing.map(x=>`<li>${x}</li>`).join("")}</ul></div>
- <div class="panel"><h3>👨‍🍳 שלבי הכנה</h3><ol>${r.steps.map(x=>`<li>${x}</li>`).join("")}</ol></div></div>
- <div class="panel"><h3>⭐ טיפ שף</h3><p>${r.tip}</p></div>`;
- document.getElementById("finishBtn").classList.remove("hidden");
- document.getElementById("nextBtn").classList.add("hidden");
-}
-function finishRecipe(){
- done++; score+=100; update();
- document.getElementById("finishBtn").classList.add("hidden");
- if(done>=12){endGame();return}
- document.getElementById("nextBtn").classList.remove("hidden");
-}
-function update(){document.getElementById("score").textContent=score;document.getElementById("done").textContent=done;document.getElementById("bar").style.width=(done/12*100)+"%";updateTimer()}
-function updateTimer(){let m=Math.floor(time/60),s=time%60;document.getElementById("timer").textContent=String(m).padStart(2,"0")+":"+String(s).padStart(2,"0")}
-function endGame(){clearInterval(timerId);document.getElementById("game").classList.add("hidden");document.getElementById("end").classList.remove("hidden");document.getElementById("finalScore").textContent=score}
+const STORAGE_KEY='todo-list:v1';
+const el={input:document.getElementById('taskInput'),addBtn:document.getElementById('addBtn'),list:document.getElementById('list'),count:document.getElementById('count'),filters:document.querySelectorAll('[data-filter]'),clearCompleted:document.getElementById('clearCompleted'),clearAll:document.getElementById('clearAll')};
+let todos=[];let filter='all';
+function load(){try{const raw=localStorage.getItem(STORAGE_KEY);if(!raw) return;todos=JSON.parse(raw)||[];}catch(e){console.error(e);todos=[]}}
+function save(){localStorage.setItem(STORAGE_KEY,JSON.stringify(todos))}
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,8)}
+function countActive(){return todos.filter(t=>!t.done).length}
+function render(){const shown=todos.filter(t=>filter==='active'?!t.done:filter==='completed'?t.done:true);el.list.innerHTML='';for(const t of shown){const li=document.createElement('li');li.className='item'+(t.done?' done':'');li.dataset.id=t.id;li.innerHTML=`<input type="checkbox" class="chk" ${t.done?'checked':''} aria-label="mark"> <div class="text" style="flex:1;min-width:0" title="${escapeHtml(t.text)}">${escapeHtml(t.text)}</div><div class="actions"><button class="edit">✏️</button><button class="del">🗑️</button></div>`;li.querySelector('.text').addEventListener('dblclick',()=>startEdit(t.id,li));el.list.appendChild(li)}el.count.textContent=`${countActive()} פעיל / ${todos.length} סה"כ`}
+function escapeHtml(s){return String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;')}
+function addTask(text){const trimmed=String(text||'').trim();if(!trimmed) return;todos.unshift({id:uid(),text:trimmed,done:false,created:Date.now()});save();render();el.input.value='';el.input.focus()}
+function toggleDone(id){const t=todos.find(x=>x.id===id);if(!t) return;t.done=!t.done;save();render()}
+function deleteTask(id){todos=todos.filter(x=>x.id!==id);save();render()}
+function startEdit(id,li){const t=todos.find(x=>x.id===id);if(!t) return;const textDiv=li.querySelector('.text');const input=document.createElement('input');input.className='editable';input.value=t.text;input.setAttribute('aria-label','edit task');textDiv.replaceWith(input);input.focus();input.select();function finish(saveEdit){if(saveEdit){const val=input.value.trim();if(val){t.text=val}else{todos=todos.filter(x=>x.id!==id)}}save();render()}input.addEventListener('blur',()=>finish(true),{once:true});input.addEventListener('keydown',ev=>{if(ev.key==='Enter'){ev.preventDefault();finish(true)}if(ev.key==='Escape'){ev.preventDefault();finish(false)}})}
+el.list.addEventListener('click',e=>{const li=e.target.closest('li.item');if(!li) return;const id=li.dataset.id;if(e.target.matches('.chk')){toggleDone(id);return}if(e.target.matches('.del')){if(confirm('למחוק משימה זו?')) deleteTask(id);return}if(e.target.matches('.edit')){startEdit(id,li);return}})
+el.input.addEventListener('keydown',e=>{if(e.key==='Enter') addTask(el.input.value)})
+el.addBtn.addEventListener('click',()=>addTask(el.input.value))
+el.filters.forEach(btn=>{btn.addEventListener('click',()=>{el.filters.forEach(b=>b.classList.remove('active'));btn.classList.add('active');filter=btn.dataset.filter;render()})})
+el.clearCompleted.addEventListener('click',()=>{if(!todos.some(t=>t.done)) return alert('אין משימות שבוצעו.');if(confirm('למחוק את כל המשימות שבוצעו?')){todos=todos.filter(t=>!t.done);save();render()}})
+el.clearAll.addEventListener('click',()=>{if(!todos.length) return; if(confirm('למחוק את כל המשימות?')){todos=[];save();render()}})
+(function init(){load();render();document.querySelectorAll('[data-filter]').forEach(b=>{if(b.dataset.filter==='all')b.classList.add('active')})})();
 </script>
 </body>
 </html>
